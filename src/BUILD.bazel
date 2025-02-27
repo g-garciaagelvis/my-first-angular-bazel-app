@@ -1,0 +1,16 @@
+load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+
+load("//:defs.bzl", "ng_application")
+
+package(default_visibility = ["//visibility:public"])
+
+
+
+# The Angular demo application
+ng_application(
+    name = "demo",
+
+)
+
+# An asset from within an npm package
