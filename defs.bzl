@@ -78,13 +78,13 @@ def ng_application(name, deps = [], test_deps = [], assets = None, html_assets =
       visibility: visibility of the primary targets ({name}, 'test', 'serve')
       **kwargs: extra args passed to main Angular CLI rules
     """
-    assets = assets if assets else native.glob(["assets/**/*"])
-    html_assets = html_assets if html_assets else []
+    assets = assets if assets else []
+    html_assets =  []
 
-    test_spec_srcs = native.glob(["app/**/*.spec.ts"])
+    test_spec_srcs = []
 
     srcs = native.glob(
-        ["main.ts", "app/**/*", "package.json"],
+        include=["main.ts", "**/*"],
         exclude = test_spec_srcs,
     )
 
@@ -138,7 +138,7 @@ def _pkg_web(name, entry_point, entry_deps, html_assets, assets, production, vis
         name = bundle,
         entry_points = [entry_point],
         srcs = entry_deps,
-        define = NG_PROD_DEFINE if production else NG_DEV_DEFINE,
+        define =  NG_DEV_DEFINE,
         format = "esm",
         output_dir = True,
         splitting = True,
@@ -151,8 +151,8 @@ def _pkg_web(name, entry_point, entry_deps, html_assets, assets, production, vis
 
     copy_to_directory(
         name = name,
-        srcs = [":%s" % bundle, ":polyfills-bundle", ":%s" % html_out] + html_assets + assets,
-        root_paths = [".", "%s/%s" % (native.package_name(), html_out)],
+        srcs = [":%s" % bundle] + html_assets + assets,
+        root_paths = ["."],
         visibility = visibility,
     )
 
